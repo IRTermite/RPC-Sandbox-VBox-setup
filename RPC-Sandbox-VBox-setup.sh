@@ -15,10 +15,6 @@
 ##### Host-only create  http://knowledgefrontier.blogspot.com/2013/01/virtualbox-host-only-mode-without.html
 
 
-# Variables
-
-
-
 # EULA
 
 ## Show EULA and ask for accept to continue
@@ -64,6 +60,12 @@ else
 	fi
 
 
+# Variables
+
+## Bridged Device Name - Host Interface
+namevnic1= ip a | grep UP | grep -v lo | awk -F ':' '{ print $2 }'
+
+
 # Import Appliance
 
 ## >> Insert some of the options to allow overrides for the disk name and others.  Run the import without --eula arguments to see the other options.
@@ -94,7 +96,7 @@ vboxmanage dhcpserver modify --ifname vboxnet0 --enable
 ### Available options [none|null|nat|bridged|intnet|hostonly|generic]
 
 ### Interface 1
-vboxmanage modifyvm <uuid|name> --nic1 bridged
+vboxmanage modifyvm $namevnic1 --nic1 bridged
 ### Interface 2
 vboxmanage modifyvm <uuid|name> --nic2 intnet
 ### Interface 3
