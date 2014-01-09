@@ -1,8 +1,19 @@
 #!/bin/bash
 ## Written By: Dale "Termite" Bracey | @IRTermite | dale@rackspace.com
 
+# The purpose of this script, is to help simplify the initial import and
+# setup of the Rackspace Private Cloud Sandbox Alliance.  Currently, we
+# have instructions[1] for VirtualBox imports, that requires a few manual
+# changes in the VBox panel after import.  This scrip hopes to remove the
+# need for the user to even have to touch those settings or run the import
+# process themselves.
+#
+# [1] http://www.rackspace.com/knowledge_center/article/rackspace-private-cloud-sandbox
+
+
 ##### Create bridge from cli?  http://www.scottro.net/vboxbridge.html
 ##### Host-only create  http://knowledgefrontier.blogspot.com/2013/01/virtualbox-host-only-mode-without.html
+
 
 # Variables
 
@@ -60,6 +71,7 @@ else
 ## >> Can't import until license agreement listed
 vboxmanage import --vsys 0 --eula accept RPC-SANDBOX-VBOX*.ova
 
+
 # VBox Network Preferences
 
 ## Create host-only network
@@ -73,8 +85,6 @@ vboxmanage list hostonlyifs
 vboxmanage dhcpserver add --ifname vboxnet0 --ip 192.168.56.100 --netmask 255.255.255.0 --lowerip 192.168.56.200 --upperip 192.168.56.254
 vboxmanage dhcpserver modify --ifname vboxnet0 --ip 192.168.56.100 --netmask 255.255.255.0 --lowerip 192.168.56.200 --upperip 192.168.56.254
 vboxmanage dhcpserver modify --ifname vboxnet0 --enable
-
-
 
 ## Set VBox interfaces
 
