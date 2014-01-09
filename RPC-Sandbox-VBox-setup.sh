@@ -101,7 +101,7 @@ vboxmanage modifyvm <uuid|name> --nic2 intnet
 vboxmanage modifyvm <uuid|name> --nic3 hostonly
 # >> set host interface used as well
 # If host-only networking has been enabled for a virtual network card (see the --nic option above; otherwise this setting has no effect), use this option to specify which host-only networking interface the given virtual network interface will use. For details, please see Section 6.7, “Host-only networking”.
-vboxmanage modifyvm --hostonlyadapter3 <devicename>$hostAdapter
+vboxmanage modifyvm --hostonlyadapter3 <devicename>
 ### Interface 4
 vboxmanage modifyvm <uuid|name> --nic4 intnet
 
