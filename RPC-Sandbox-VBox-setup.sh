@@ -4,8 +4,15 @@
 ##### Create bridge from cli?  http://www.scottro.net/vboxbridge.html
 ##### Host-only create  http://knowledgefrontier.blogspot.com/2013/01/virtualbox-host-only-mode-without.html
 
-# Show EULA and ask for accept to continue
-cat "The Rackspace Private Cloud (“RPC”) Sandbox is a virtual appliance that allows 
+# Variables
+
+
+
+# EULA
+
+## Show EULA and ask for accept to continue
+echo
+echo "The Rackspace Private Cloud (“RPC”) Sandbox is a virtual appliance that allows 
 you to run RPC on any hardware using virtualization tools.  RPC Sandbox is 
 Rackspace Private Cloud Software, powered by OpenStack, packaged into a virtual
 environment.  RPC Sandbox allows you to experiment with the latest RPC features
@@ -33,12 +40,21 @@ Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
-"
+" |less
 
-## >> Insert prompt to accept...
+## EULA Response
+echo "Do you agree to the EULA?: yes|no [Enter]"
+read eulaAgreement
+
+if [ $eulaAgreement = "yes" ]; then
+	echo "Enjoy!"
+else
+	exit
+	fi
 
 
 # Import Appliance
+
 ## >> Insert some of the options to allow overrides for the disk name and others.  Run the import without --eula arguments to see the other options.
 
 ## >> Can't import until license agreement listed
@@ -48,8 +64,10 @@ vboxmanage import --vsys 0 --eula accept RPC-SANDBOX-VBOX*.ova
 
 ## Create host-only network
 vboxmanage hostonlyif create
+
 ## >> Need to figure out how to just grab the last created
 vboxmanage list hostonlyifs
+
 ## >> This may cause problems, since it creates v6 IPs with it, and can't combine v4 and v6 arguments
 ## vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0
 vboxmanage dhcpserver add --ifname vboxnet0 --ip 192.168.56.100 --netmask 255.255.255.0 --lowerip 192.168.56.200 --upperip 192.168.56.254
@@ -59,15 +77,23 @@ vboxmanage dhcpserver modify --ifname vboxnet0 --enable
 
 
 ## Set VBox interfaces
+
+### Which host interface is live?
+# >> Set variable of hostAdapter
+
 ### Available options [none|null|nat|bridged|intnet|hostonly|generic]
+
 ### Interface 1
-vboxmanage modifyvm <uuid|name> --nic<1-N> bridged
+vboxmanage modifyvm <uuid|name> --nic1 bridged
 ### Interface 2
-vboxmanage modifyvm <uuid|name> --nic<1-N> intnet
+vboxmanage modifyvm <uuid|name> --nic2 intnet
 ### Interface 3
-vboxmanage modifyvm <uuid|name> --nic<1-N> hostonly
+vboxmanage modifyvm <uuid|name> --nic3 hostonly
+# >> set host interface used as well
+# If host-only networking has been enabled for a virtual network card (see the --nic option above; otherwise this setting has no effect), use this option to specify which host-only networking interface the given virtual network interface will use. For details, please see Section 6.7, “Host-only networking”.
+vboxmanage modifyvm --hostonlyadapter3 <devicename>$hostAdapter
 ### Interface 4
-vboxmanage modifyvm <uuid|name> --nic<1-N> intnet
+vboxmanage modifyvm <uuid|name> --nic4 intnet
 
 
 # If host-only networking has been enabled for a virtual network card (see the --nic option above; otherwise this setting has no effect), use this option to specify which host-only networking interface the given virtual network interface will use. For details, please see Section 6.7, “Host-only networking”.
