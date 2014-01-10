@@ -52,7 +52,6 @@ specific language governing permissions and limitations under the License.
 ## EULA Response
 echo "Do you agree to the EULA?: yes|no [Enter]"
 read eulaAgreement
-
 if [ $eulaAgreement = "yes" ]; then
 	echo "Enjoy!"
 else
@@ -60,10 +59,30 @@ else
 	fi
 
 
+# User Inputs
+
+## User input VM Name
+#echo "Type custom name for VM. (Leave blank for default.) [Enter]:"
+#read vmnameread
+#if [ -z "$vmnameread" ]
+#then
+#	echo "No"
+#	vmname=$vmnameread
+#else
+#	echo "Yes"
+#	vmname=
+#fi
+
+
 # Variables
 
+## Appliance Source File Name
+sandbox-ova= RPC-SANDBOX-VBOX*.ova
+## VM Name
+#vmname=$vmnameread
 ## Bridged Device Name - Host Interface
 namevnic1= ip a | grep UP | grep -v lo | awk -F ':' '{ print $2 }'
+
 
 
 # Import Appliance
@@ -71,7 +90,7 @@ namevnic1= ip a | grep UP | grep -v lo | awk -F ':' '{ print $2 }'
 ## >> Insert some of the options to allow overrides for the disk name and others.  Run the import without --eula arguments to see the other options.
 
 ## >> Can't import until license agreement listed
-vboxmanage import --vsys 0 --eula accept RPC-SANDBOX-VBOX*.ova
+vboxmanage import --vsys 0 --eula accept $sandbox-ova
 
 
 # VBox Network Preferences
@@ -83,7 +102,7 @@ vboxmanage hostonlyif create
 vboxmanage list hostonlyifs
 
 ## >> This may cause problems, since it creates v6 IPs with it, and can't combine v4 and v6 arguments
-## vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0
+vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0
 vboxmanage dhcpserver add --ifname vboxnet0 --ip 192.168.56.100 --netmask 255.255.255.0 --lowerip 192.168.56.200 --upperip 192.168.56.254
 vboxmanage dhcpserver modify --ifname vboxnet0 --ip 192.168.56.100 --netmask 255.255.255.0 --lowerip 192.168.56.200 --upperip 192.168.56.254
 vboxmanage dhcpserver modify --ifname vboxnet0 --enable
@@ -96,17 +115,12 @@ vboxmanage dhcpserver modify --ifname vboxnet0 --enable
 ### Available options [none|null|nat|bridged|intnet|hostonly|generic]
 
 ### Interface 1
-vboxmanage modifyvm $namevnic1 --nic1 bridged
+vboxmanage modifyvm RPC-SANDBOX-VBOX --nic1 bridged --bridgeadapter1 $namevnic1
 ### Interface 2
-vboxmanage modifyvm <uuid|name> --nic2 intnet
+vboxmanage modifyvm RPC-SANDBOX-VBOX --nic2 intnet
 ### Interface 3
-vboxmanage modifyvm <uuid|name> --nic3 hostonly
 # >> set host interface used as well
 # If host-only networking has been enabled for a virtual network card (see the --nic option above; otherwise this setting has no effect), use this option to specify which host-only networking interface the given virtual network interface will use. For details, please see Section 6.7, “Host-only networking”.
-vboxmanage modifyvm --hostonlyadapter3 <devicename>
+vboxmanage modifyvm RPC-SANDBOX-VBOX --nic3 hostonly --hostonlyadapter3 <devicename>
 ### Interface 4
-vboxmanage modifyvm <uuid|name> --nic4 intnet
-
-
-# If host-only networking has been enabled for a virtual network card (see the --nic option above; otherwise this setting has no effect), use this option to specify which host-only networking interface the given virtual network interface will use. For details, please see Section 6.7, “Host-only networking”.
-vboxmanage modifyvm --hostonlyadapter<1-N> none|<devicename>
+vboxmanage modifyvm RPC-SANDBOX-VBOX --nic4 intnet
