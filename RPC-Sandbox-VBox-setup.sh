@@ -81,7 +81,8 @@ sandbox-ova= RPC-SANDBOX-VBOX*.ova
 ## VM Name
 #vmname=$vmnameread
 ## Bridged Device Name - Host Interface
-namevnic1= ip a | grep UP | grep -v lo | awk -F ':' '{ print $2 }'
+#namevnic1= ip a | grep UP | grep -v lo | awk -F ':' '{ print $2 }'
+namevnic1= ip a | grep UP | grep -v lo | grep -v vboxnet* | awk -F ':' '{ print $2 }'
 
 
 
