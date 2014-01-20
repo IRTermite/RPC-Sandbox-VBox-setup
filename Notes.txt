@@ -1,0 +1,71 @@
+=================================================
+Outlining the instructions from http://www.rackspace.com/knowledge_center/article/rackspace-private-cloud-sandbox
+=================================================
+
+1) Download .ova Image
+
+> $ wget http://b73074de3e3005d3cbe3-e008c7df2e56236b013895bc1d6b995e.r10.cf2.rackcdn.com/RPC-SANDBOX-VBOX.ova
+
+=================================================
+
+2) GUI - navigate to Preferences-Network-Host-Only Networks
+
+=================================================
+
+3) GUI - Click on the icon to add a new host-only network and assign it a name
+
+=================================================
+
+4) Configure the host network settings
+add a new host-only network and assign it a name
+	
+	## Host Network
+	IPv4 Address: 192.168.56.1
+	IPv4 Network Mask: 255.255.255.0
+	IPv6 Address: <Leave this field blank>
+	IPv6 Network Mask Length: 0
+
+5) Configure DHCP Server settings
+
+	## DHCP Server Settings
+	Server Address: 192.168.56.100
+	Server Mask: 255.255.255.0
+	Lower Address Bond: 192.168.56.200
+	Upper Address Bond: 192.168.56.254
+
+# Discover and set the variable for the first NIC in the server
+> $ namevnic1= ip a | grep UP | grep -v lo | grep -v vboxnet* | awk -F ':' '{ print $2 }'
+
+=================================================
+
+6) Navigate to File Import Choose File
+
+Select the OVA file, and click Import to import the virtual machine.
+
+=================================================
+
+7) After the import process is complete, enable acceleration. Select the new virtual machine and navigate to Settings+System+Acceleration Select the following check boxes:
+
+Enable VT-x/AMD-V
+Enable Nested Paging
+
+=================================================
+
+8) Configure the adapter settings as follows:
+
+Adapter 1: Attach to the internet connection.
+This defaults to the bridged adapter on the ethernet port, but can be set to NAT if you cannot use a bridged network due to network restrictions. However, you will not be able to connect to built instances from within the Sandbox cluster. You will still be able to use Horizon and connect to the built instances via the Horizon console.
+
+Adapter 2: Attach to Internal Network (Internal Only). Accept the default name.
+Adapter 3: Attach to Host Only Adapter. The network name should match the one created in Step 3.
+Adapter 4: Attach to Internal Network (Internal Only).
+
+=================================================
+
+9) Click OK to accept the settings and then click Start the VM to start the virtual machine. This could take a long time; however it will get faster once the image has been saved in the cache.
+
+=================================================
+
+10) Boot
+
+=================================================
