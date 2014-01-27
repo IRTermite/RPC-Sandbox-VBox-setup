@@ -77,10 +77,11 @@ else
 # Variables
 
 ## Appliance Source File Name
-sandbox-ova= RPC-SANDBOX-VBOX*.ova
+sandboxova= RPC-SANDBOX-VBOX*.ova
 ## VM Name
 #vmname=$vmnameread
 ## Bridged Device Name - Host Interface
+##??? Is this the right thing to do though?  What if they aren't using the first NIC for their internet access?
 #namevnic1= ip a | grep UP | grep -v lo | awk -F ':' '{ print $2 }'
 namevnic1= ip a | grep UP | grep -v lo | grep -v vboxnet* | awk -F ':' 'END{ print $2 }'
 
@@ -91,7 +92,7 @@ namevnic1= ip a | grep UP | grep -v lo | grep -v vboxnet* | awk -F ':' 'END{ pri
 ## >> Insert some of the options to allow overrides for the disk name and others.  Run the import without --eula arguments to see the other options.
 
 ## >> Can't import until license agreement listed
-vboxmanage import --vsys 0 --eula accept $sandbox-ova
+vboxmanage import --vsys 0 --eula accept $sandboxova
 
 
 # VBox Network Preferences
